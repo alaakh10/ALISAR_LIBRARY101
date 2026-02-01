@@ -1,0 +1,95 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<!-- الرسالة الترحيبية -->
+<div class="hero text-center py-5">
+    <h2 id="welcome-message" class="text-primary">مرحبًا بك في مكتبتنا!</h2>
+</div>
+
+<!-- الفقرة التعريفية -->
+<div class="intro container text-center mb-5">
+    <p class="lead">
+        مكتبة آليسار هي منصة تفاعلية تهدف إلى تقديم محتوى معرفي متنوع يشمل الكتب التعليمية، الروايات الأدبية، والمقالات التحفيزية، مع تجربة مستخدم سلسة.
+    </p>
+</div>
+
+<!-- الأقسام -->
+<div class="container card-section">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">📘 الكتب التعليمية</h5>
+                    <p class="card-text">كتب ومقالات تعليمية في مختلف المجالات.</p>
+                    <a href="{% url 'education_books' %}" class="btn btn-primary">تصفح القسم</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">📖 الروايات الأدبية</h5>
+                    <p class="card-text">روايات عربية وعالمية مصنفة حسب النوع.</p>
+                    <a href="{% url 'novels_books' %}" class="btn btn-primary">تصفح القسم</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">🌱 تطوير الذات</h5>
+                    <p class="card-text">كتب تحفيزية ومقالات تنموية لتطوير الذات.</p>
+                    <a href="{% url 'self_development_books' %}" class="btn btn-primary">تصفح القسم</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">🏛️ الكتب التاريخية</h5>
+                    <p class="card-text">اكتشف قصص الحضارات والأحداث التي شكلت العالم.</p>
+                    <a href="{% url 'history_books' %}" class="btn btn-primary">تصفح القسم</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">🌍 كتب عالمية مترجمة</h5>
+                    <p class="card-text">أعمال أدبية عالمية مترجمة بأسلوب عربي راقٍ.</p>
+                    <a href="{% url 'translated_books' %}" class="btn btn-primary">تصفح القسم</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+    <div class="card h-100 text-center">
+        <div class="card-body">
+            <h5 class="card-title">📿 الكتب الدينية</h5>
+            <p class="card-text">كتب دينية تغذي الروح وترسخ القيم.</p>
+            <a href="{% url 'religious_books' %}" class="btn btn-primary">تصفح القسم</a>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+
+<script>
+    const welcomeMessages = [
+        "📚 مرحبًا بك في مكتبة آليسار، حيث تبدأ رحلتك المعرفية!",
+        "🌟 أهلاً بك! اكتشف كتبًا تلهمك وتثري فكرك.",
+        "👋 يسعدنا وجودك! هل تبحث عن شيء جديد لتقرأه؟",
+        "📖 مرحبًا بك في عالم الكتب والروايات!",
+        "💡 انطلق معنا في رحلة معرفية ممتعة!"
+    ];
+
+    const welcomeElement = document.getElementById("welcome-message");
+    const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
+    welcomeElement.textContent = welcomeMessages[randomIndex];
+</script>
+{% endblock %}

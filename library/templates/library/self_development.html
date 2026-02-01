@@ -1,0 +1,171 @@
+{% extends 'library/base.html' %}
+
+{% block title %}تطوير الذات - مكتبة أليسار{% endblock %}
+
+{% block content %}
+<div class="hero text-center py-4">
+    <h2 class="text-primary">🌱 قسم تطوير الذات</h2>
+    <p class="lead">كتب تحفيزية ومقالات تنموية لتطوير الذات</p>
+</div>
+
+<div class="container card-section">
+    <div class="row g-4">
+        {% for book in books %}
+        <div class="col-md-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    
+                    <!-- المؤلف -->
+                    {% if book.author %}
+                    <h6 class="card-subtitle mb-3 text-muted">
+                        ✍️ {{ book.author.name }}
+                    </h6>
+                    {% endif %}
+                    
+                    <!-- الوصف -->
+                    <p class="card-text">{{ book.description|truncatewords:30 }}</p>
+                    
+                    <!-- معلومات إضافية -->
+                    <div class="book-info mb-3">
+                        <small class="text-muted">
+                            📅 {{ book.created_at|date:"Y/m/d" }}
+                        </small>
+                        
+                        {% if book.pdf_file %}
+                        <small class="text-muted ms-3">
+                            📄 PDF
+                        </small>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- أزرار التحكم -->
+                    <div class="btn-group" role="group">
+                        <!-- زر القراءة -->
+                        {% if book.pdf_file %}
+                        <a href="{{ book.pdf_file.url }}" 
+                           class="btn btn-primary" 
+                           target="_blank">
+                            📖 قراءة
+                        </a>
+                        {% else %}
+                        <button class="btn btn-secondary" disabled>
+                            📖 غير متوفر
+                        </button>
+                        {% endif %}
+                        
+                        <!-- زر التحميل -->
+                        {% if book.pdf_file %}
+                        <a href="{{ book.pdf_file.url }}" 
+                           class="btn btn-success"
+                           download
+                           onclick="confirmDownload('{{ book.title }}')">
+                            ⬇️ تحميل
+                        </a>
+                        {% else %}
+                        <button class="btn btn-secondary" disabled>
+                            ⬇️ غير متوفر
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-info">
+                <h5>لا توجد كتب في هذا القسم بعد</h5>
+                <a href="/admin" class="btn btn-success">➕ إضافة كتاب جديد</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+// دالة تأكيد التحميل
+function confirmDownload(bookTitle) {
+    if (confirm(`هل تريد تحميل الكتاب: "${bookTitle}"؟`)) {
+        
+        console.log(`تم تحميل الكتاب: ${bookTitle}`);
+    } else {
+        
+        event.preventDefault();
+        return false;
+    }
+}
+
+//  تأثير للبطاقات
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+</script>
+
+<style>
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    min-height: 3rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.card-text {
+    flex-grow: 1;
+    min-height: 5rem;
+}
+
+.btn-group {
+    width: 100%;
+}
+
+.btn-group .btn {
+    flex: 1;
+}
+
+.btn-primary {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.btn-success {
+    background-color: #e67e22;
+    border-color: #e67e22;
+}
+
+.hero {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.book-info {
+    font-size: 0.85rem;
+}
+</style>
+{% endblock %}

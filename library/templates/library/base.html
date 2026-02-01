@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}مكتبة آليسار الإلكترونية{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    {% load static %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(to bottom right, #fdf6ec, #f9f9f9);
+            margin: 0;
+            padding: 0;
+            padding-top: 100px; 
+        }
+
+        /* الهيدر الثابت */
+        .main-header {
+            background-color: #fff8dc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px 0 20px; 
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* الجزء الأيسر: البحث */
+        .header-left {
+            position: absolute;
+            left: 25px; 
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* الجزء الأوسط: الشعار والروابط */
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 40px; 
+            margin: 0 auto;
+        }
+
+        /* الجزء الأيمن: فارغ */
+        .header-right {
+            width: 180px; 
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 65px; 
+            height: 65px;
+            border-radius: 50%; 
+            object-fit: cover;
+            margin-left: 12px;
+            border: 3px solid #ff6f61; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .logo-section h4 {
+            font-size: 1.4rem; 
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 10px 20px; 
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            background-color: #ff6f61;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        
+        .search-container {
+            width: 220px; 
+        }
+
+        .search-input {
+            border-radius: 20px; 
+            padding: 8px 15px;
+            padding-right: 40px; 
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+            background-color: white;
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.2);
+            outline: none;
+            width: 240px; 
+        }
+
+        .search-input::placeholder {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px; 
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 16px; 
+        }
+
+        /* الكاردات */
+        .card {
+            background: linear-gradient(to bottom right, #fff3e0, #ffe0b2);
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        /* أزرار التصفح والقراءة */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff9a3d, #ff6f61);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(255, 111, 97, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ff8a2d, #e55a50);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 111, 97, 0.4);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        /* الفوتر */
+        footer {
+            background-color: #ff6f61;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-links a {
+            color: #fffacd;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* تلميحات */
+        .secret-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: none;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .secret-hint.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        
+        @media (max-width: 1200px) {
+            .header-content {
+                padding: 0 30px 0 15px;
+            }
+            
+            .header-left {
+                left: 20px;
+            }
+            
+            .search-container {
+                width: 200px;
+            }
+            
+            .search-input:focus {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                padding: 0 15px;
+            }
+            
+            .header-left, .header-center, .header-right {
+                position: static;
+                transform: none;
+                width: 100%;
+                text-align: center;
+                margin: 5px 0;
+            }
+            
+            .header-left {
+                order: 1; 
+            }
+            
+            .header-center {
+                order: 2; 
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-right {
+                order: 3; 
+                display: none; 
+            }
+            
+            .search-container {
+                width: 100%;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+            
+            .search-input {
+                width: 100% !important;
+            }
+            
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo {
+                margin-left: 0;
+            }
+            
+            .search-container {
+                max-width: 280px;
+            }
+            
+            .nav-links a {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الهيدر الثابت -->
+    <header class="main-header">
+        <div class="header-content">
+            
+            <div class="header-left">
+                <div class="search-container">
+                    <form action="{% url 'search' %}" method="get" id="searchForm">
+                        <div class="search-wrapper">
+                            <input type="text" 
+                                   name="q" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="ابحث عن كتاب أو مؤلف..."
+                                   autocomplete="off">
+                            <div class="search-icon">🔍</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            
+            <div class="header-center">
+                 <div class="logo-section">
+                    <img src="{% static 'library/images/Alisar_logo.png' %}" alt="لوغو مكتبة آليسار" class="logo">
+                    <h4 class="mb-0 me-3" style="font-weight: 700; color: #333;">مكتبة آليسار الإلكترونية</h4>
+                </div>
+               
+
+                <!-- الروابط -->
+                <nav class="nav-links">
+                    <a href="{% url 'index' %}">🏠 الرئيسية</a>
+                </nav>
+            </div>
+            
+            <!-- الجزء الأيمن: فارغ  -->
+            <div class="header-right"></div>
+</div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <h5>مكتبة آليسار الإلكترونية</h5>
+            <p>منصة معرفية شاملة لجميع احتياجاتك القرائية</p>
+            <div class="footer-links">
+                <a href="{% url 'index' %}">الرئيسية</a> |
+                <a href="mailto:almaarinia@gmail.com">📧 التواصل</a>
+            </div>
+            <p class="mt-3">💖 شكراً لزيارتك مكتبة آليسار</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        
+        if (searchInput) {
+            // اختصار Ctrl+F للبحث
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+                
+                // Esc لمسح البحث
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    searchInput.blur();
+                }
+            });
+            
+            
+            searchInput.addEventListener('focus', function() {
+                this.style.width = '240px';
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.style.width = '220px';
+                }
+            });
+            
+            // البحث عند الضغط على Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                
+                // إذا كتب 3 أحرف أو أكثر، يبحث تلقائياً بعد 1.5 ثانية
+                if (this.value.length >= 3) {
+                    searchTimeout = setTimeout(() => {
+                        searchForm.submit();
+                    }, 1500);
+                }
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>

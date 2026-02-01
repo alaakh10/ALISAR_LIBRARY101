@@ -1,0 +1,241 @@
+{% extends 'library/base.html' %}
+
+{% block title %}نتائج البحث - مكتبة آليسار{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="padding-top: 150px;">
+    
+    <!-- ==================== التحقق من الرمز السري ==================== -->
+    {% if query %}
+        {% if query == "admin123" or query == "library010" or query == "alisar101" %}
+            <!-- إذا كان الرمز سري - توجيه مباشر للإدارة -->
+            <div class="text-center py-5">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                    <h4>🔐 تم التحقق بنجاح!</h4>
+                    <p class="mb-3">جاري توجيهك إلى لوحة تحكم الإدارة...</p>
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">جاري التحميل...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // توجيه بعد 2 ثانية
+                    setTimeout(function() {
+                        window.location.href = "/admin";
+                    }, 2000);
+                });
+            </script>
+            
+            <!-- إخفاء بقية الصفحة -->
+            <style>
+                .container > .row:first-child,
+                .alert-info,
+                .row {
+                    display: none !important;
+                }
+            </style>
+            
+            {% else %}
+            <!-- إذا كان بحث عادي - عرض الصفحة كالمعتاد -->
+        {% endif %}
+    {% endif %}
+    <!-- ==================== نهاية التحقق ==================== -->
+    
+    <!-- شريط البحث -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4 text-primary">
+                        <i class="fas fa-search me-2"></i>بحث في مكتبة آليسار
+                    </h3>
+                    
+                    <form method="GET" action="{% url 'search' %}">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="q" 
+                                   class="form-control" 
+                                   placeholder="ابحث عن كتاب، مؤلف، أو موضوع..." 
+                                   value="{{ query }}"
+                                   style="text-align: right;">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search me-2"></i>بحث
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- رسالة النتائج -->
+    {% if query and query != "admin123" and query != "secret2024" and query != "alisar" %}
+    <div class="alert alert-info mb-4">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle me-3"></i>
+            <div>
+                <h5>نتائج البحث عن: "<span class="text-success">{{ query }}</span>"</h5>
+                {% if books %}
+                    <p>تم العثور على <strong>{{ books|length }}</strong> نتيجة</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- عرض الكتب -->
+    {% if books %}
+        <div class="row">
+            {% for book in books %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <!-- العنوان -->
+                        <h5 class="card-title text-primary">{{ book.title }}</h5>
+                        
+                        <!-- المؤلف -->
+                        <h6 class="card-subtitle mb-3 text-muted">
+                            <i class="fas fa-user me-2"></i>
+                            {% if book.author %}
+                                {{ book.author.name }}
+                            {% else %}
+                                مؤلف غير معروف
+                            {% endif %}
+                        </h6>
+                        
+                        <!-- التصنيف -->
+                        {% if book.category %}
+                        <p class="mb-2">
+                            <i class="fas fa-tag me-2"></i>
+                            {{ book.category.name }}
+                        </p>
+                        {% endif %}
+                        
+                        <!-- الوصف -->
+                        {% if book.description %}
+                        <p class="card-text">
+                            {{ book.description|truncatewords:20 }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <!-- زر التحميل -->
+                            {% if book.pdf_file %}
+                            <a href="{{ book.pdf_file.url }}" class="btn btn-success btn-sm" target="_blank">
+                                <i class="fas fa-download me-1"></i>تحميل
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary btn-sm" disabled>
+                                <i class="fas fa-download me-1"></i>غير متوفر
+                            </button>
+                            {% endif %}
+                            
+                            <!-- زر قراءة الكتاب -->
+                            {% if book.pdf_file %}
+                            <a href="{{ book.pdf_file.url }}" 
+                            class="btn btn-primary btn-sm" 
+                            target="_blank">
+                                <i class="fas fa-book-open me-1"></i>قراءة الكتاب
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary btn-sm" disabled>
+                                <i class="fas fa-book-open me-1"></i>غير متوفر
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+    {% else %}
+        <!-- إذا لم توجد نتائج -->
+        {% if query and query != "admin123" and query != "secret2024" and query != "alisar" %}
+        <div class="text-center py-5">
+            <div class="alert alert-warning">
+                <i class="fas fa-search fa-2x mb-3"></i>
+                <h4>لم يتم العثور على نتائج</h4>
+                <p class="mb-3">لم نتمكن من العثور على كتب تطابق "{{ query }}"</p>
+                
+                <div class="mt-3">
+                    <h6>اقتراحات للبحث:</h6>
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="setSearch('رواية')">رواية</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="setSearch('ديني')">كتاب ديني</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="setSearch('تعليمي')">كتاب تعليمي</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="setSearch('تاريخ')">كتاب تاريخي</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if not query %}
+        <!-- إذا كان البحث فارغاً -->
+        <div class="text-center py-5">
+            <div class="alert alert-info">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>ابحث في مكتبة آليسار</h4>
+                <p>اكتب كلمة للبحث في مكتبتنا</p>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+// دالة لعرض تفاصيل الكتاب
+function showBookDetails(bookId) {
+    alert('تفاصيل الكتاب رقم: ' + bookId + '\n\nهذه الميزة قيد التطوير...');
+}
+
+// دالة لتعيين قيمة البحث
+function setSearch(word) {
+    const searchInput = document.querySelector('input[name="q"]');
+    if (searchInput) {
+        searchInput.value = word;
+        searchInput.form.submit();
+    }
+}
+
+// جعل البطاقات تفاعلية
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+</script>
+
+<!-- إضافة Font Awesome للأيقونات -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+}
+
+.card-title {
+    min-height: 3rem;
+}
+
+.card-text {
+    min-height: 4rem;
+}
+</style>
+{% endblock %}
