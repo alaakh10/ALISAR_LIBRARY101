@@ -4,22 +4,17 @@ Django settings for alisar_library project.
 
 import os
 from pathlib import Path
-import dj_database_url 
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-default-key-for-development-only"
 )
 
-
 DEBUG = False
 
 ALLOWED_HOSTS = ["alisar-library.onrender.com", "localhost", "127.0.0.1"]
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -62,8 +57,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "alisar_library.wsgi.application"
 
+# قاعدة البيانات - بدون مشاكل
+import os
+
 if os.environ.get('DATABASE_URL'):
-   
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -72,21 +69,15 @@ if os.environ.get('DATABASE_URL'):
             'PASSWORD': 'E7Ejs0WIf5d1l4eiM3yXC7lhYbIX7HUM',
             'HOST': 'dpg-d5vo9sqqcgvc739r72k0-a.oregon-postgres.render.com',
             'PORT': '5432',
-            'CONN_MAX_AGE': 600,
-            'OPTIONS': {
-                'connect_timeout': 10,
-            }
         }
     }
 else:
-    # محلياً - استخدم SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -103,34 +94,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = "ar"
 TIME_ZONE = "Asia/Damascus"
 USE_I18N = True
 USE_TZ = True
 
-
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-if 'postgresql' in DATABASES['default']['ENGINE']:
-    DATABASES['default']['OPTIONS'] = {
-        'connect_timeout': 10,
-    }
-
-    if os.environ.get('RENDER') or os.environ.get('DATABASE_URL'):
-        try:
-            import psycopg2
-        except ImportError:
-            # إذا psycopg2 مش مثبت، استخدم SQLite مؤقتاً
-            DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-            DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
