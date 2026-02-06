@@ -62,14 +62,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "alisar_library.wsgi.application"
 
-
-DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///" + str(BASE_DIR / "db.sqlite3"), 
-        conn_max_age=600, 
-        conn_health_checks=True,  
-    )
-}
+if os.environ.get('DATABASE_URL'):
+   
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'alisar_db',
+            'USER': 'alisar_db_user',
+            'PASSWORD': 'E7Ejs0WIf5d1l4eiM3yXC7lhYbIX7HUM',
+            'HOST': 'dpg-d5vo9sqqcgvc739r72k0-a.oregon-postgres.render.com',
+            'PORT': '5432',
+            'CONN_MAX_AGE': 600,
+            'OPTIONS': {
+                'connect_timeout': 10,
+            }
+        }
+    }
+else:
+    # محلياً - استخدم SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -110,3 +126,11 @@ if 'postgresql' in DATABASES['default']['ENGINE']:
     DATABASES['default']['OPTIONS'] = {
         'connect_timeout': 10,
     }
+
+    if os.environ.get('RENDER') or os.environ.get('DATABASE_URL'):
+        try:
+            import psycopg2
+        except ImportError:
+            # إذا psycopg2 مش مثبت، استخدم SQLite مؤقتاً
+            DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+            DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
