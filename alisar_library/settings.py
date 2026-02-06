@@ -57,27 +57,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "alisar_library.wsgi.application"
 
-# قاعدة البيانات - بدون مشاكل
-import os
-
-if os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'alisar_db',
-            'USER': 'alisar_db_user',
-            'PASSWORD': 'E7Ejs0WIf5d1l4eiM3yXC7lhYbIX7HUM',
-            'HOST': 'dpg-d5vo9sqqcgvc739r72k0-a.oregon-postgres.render.com',
-            'PORT': '5432',
-        }
+# قاعدة البيانات - SQLite للجميع (مؤقتاً)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
