@@ -93,3 +93,21 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+from django.contrib.auth import get_user_model
+
+def create_default_user():
+    try:
+        User = get_user_model()
+        if not User.objects.filter(username='user').exists():
+            User.objects.create_superuser(
+                username='user',
+                password='1234'
+            )
+            print("✅ تم إنشاء المستخدم الافتراضي: user / 1234")
+    except:
+        pass
+
+
+create_default_user()
