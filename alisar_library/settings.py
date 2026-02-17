@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get(
     "django-insecure-default-key-for-development-only"
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["alisar-library.onrender.com", "localhost", "127.0.0.1"]
 
